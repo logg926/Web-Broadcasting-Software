@@ -1,3 +1,4 @@
+/* eslint-disable */
 var vex = require('vex-js')
 vex.registerPlugin(require('vex-dialog'))
 
@@ -10,19 +11,19 @@ var h = require('hyperscript')
 var getusermedia = require('getusermedia')
 var enumerateDevices = require('enumerate-devices')
 
-function getMediaPermissions (cb) {
-  getusermedia({audio: true, video:true}, cb)
+function getMediaPermissions(cb) {
+  getusermedia({ audio: true, video: true }, cb)
 }
 
-function getReadableName (device, counter) {
+function getReadableName(device, counter) {
   if (device.label) {
-    return device.label + ' ('+formatKind(device.kind)+')'
+    return device.label + ' (' + formatKind(device.kind) + ')'
   } else {
-    return formatKind(device.kind)+ ' ' + counter
+    return formatKind(device.kind) + ' ' + counter
   }
 }
 
-function formatKind (kind) {
+function formatKind(kind) {
   switch (kind) {
     case 'audioinput':
       return 'Audio Input'
@@ -39,11 +40,11 @@ function formatKind (kind) {
   }
 }
 
-function contains (str, substr) {
+function contains(str, substr) {
   return str.indexOf(substr) !== -1
 }
 
-function InputManager (opts) {
+function InputManager(opts) {
   var self = this
 
   self.inputs = opts.inputs
@@ -66,7 +67,7 @@ function InputManager (opts) {
           const imageElement = document.createElement('img')
           const reader = new FileReader()
           console.log(file)
-          reader.onload = function(event) {
+          reader.onload = function (event) {
             console.log('loaded')
             imageElement.src = event.target.result
             cb(null, file.name, true, imageElement)
@@ -97,8 +98,8 @@ function InputManager (opts) {
           name: deviceName,
           getStream: function (cb) {
             getusermedia({
-              audio: contains(device.kind, 'audio') ? {exact: device.deviceId}: undefined,
-              video: contains(device.kind, 'video') ? {exact: device.deviceId} : undefined
+              audio: contains(device.kind, 'audio') ? { exact: device.deviceId } : undefined,
+              video: contains(device.kind, 'video') ? { exact: device.deviceId } : undefined
             }, function (err, stream) {
               cb(err, deviceName, hasVideo, stream)
             })
@@ -111,61 +112,61 @@ function InputManager (opts) {
 
 InputManager.prototype.getFile = function (cb) {
   var self = this
-  
+
   vex.dialog.open({
     message: 'Select a file',
     input: [
-        '<style>',
-            '.vex-custom-field-wrapper {',
-                'margin: 1em 0;',
-            '}',
-            '.vex-custom-field-wrapper > label {',
-                'display: inline-block;',
-                'margin-bottom: .2em;',
-            '}',
-        '</style>',
-        '<div class="vex-custom-field-wrapper">',
-          '<input id="fileUpload" type="file" />',
-        '</div>'
+      '<style>',
+      '.vex-custom-field-wrapper {',
+      'margin: 1em 0;',
+      '}',
+      '.vex-custom-field-wrapper > label {',
+      'display: inline-block;',
+      'margin-bottom: .2em;',
+      '}',
+      '</style>',
+      '<div class="vex-custom-field-wrapper">',
+      '<input id="fileUpload" type="file" />',
+      '</div>'
     ].join(''),
     callback: function () {
-        const file = document.querySelector('#fileUpload').files[0]
-        if (!file) return
-        cb(file)
+      const file = document.querySelector('#fileUpload').files[0]
+      if (!file) return
+      cb(file)
     }
   })
 }
 
 InputManager.prototype.chooseDevice = function (cb) {
   var self = this
-  
+
   vex.dialog.open({
     message: 'Select a media source',
     input: [
-        '<style>',
-            '.vex-custom-field-wrapper {',
-                'margin: 1em 0;',
-            '}',
-            '.vex-custom-field-wrapper > label {',
-                'display: inline-block;',
-                'margin-bottom: .2em;',
-            '}',
-        '</style>',
-        '<div class="vex-custom-field-wrapper">',
-            '<div class="vex-custom-input-wrapper">',
-                '<select name="chosen">',
-                  self.inputs.map(function (a) {
-                    return '<option value="'+a.id+'">'+a.name+'</option>'
-                  }).join(''),
-                '</select>',
-            '</div>',
-        '</div>'
+      '<style>',
+      '.vex-custom-field-wrapper {',
+      'margin: 1em 0;',
+      '}',
+      '.vex-custom-field-wrapper > label {',
+      'display: inline-block;',
+      'margin-bottom: .2em;',
+      '}',
+      '</style>',
+      '<div class="vex-custom-field-wrapper">',
+      '<div class="vex-custom-input-wrapper">',
+      '<select name="chosen">',
+      self.inputs.map(function (a) {
+        return '<option value="' + a.id + '">' + a.name + '</option>'
+      }).join(''),
+      '</select>',
+      '</div>',
+      '</div>'
     ].join(''),
     callback: function (data) {
-        if (!data) return
-        self.inputs[data.chosen].getStream(cb)
+      if (!data) return
+      self.inputs[data.chosen].getStream(cb)
     }
   })
 }
-  
+
 module.exports = InputManager

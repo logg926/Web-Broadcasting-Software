@@ -1,15 +1,16 @@
+/* eslint-disable */
 var h = require('hyperscript')
 
-function Transitions () {
+function Transitions() {
   var self = this
 
   self.element = h('div.transitions',
-                  h('label', 'Scene Transitions'))
+    h('label', 'Scene Transitions'))
 }
 
 Transitions.prototype.method = function () {
   var self = this
-  
+
 }
-  
+
 module.exports = Transitions

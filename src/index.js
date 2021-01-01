@@ -1,3 +1,4 @@
+/* eslint-disable */
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
 
