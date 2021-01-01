@@ -6,7 +6,7 @@ var mixer = require('./lib/mixer')
 
 inherits(WBS, EventEmitter)
 
-function WBS (element, opts) {
+function WBS(element, opts) {
   var self = this
   if (!(self instanceof WBS)) return new WBS(element, opts)
 
@@ -15,8 +15,8 @@ function WBS (element, opts) {
   }
 
   opts = opts || {}
-  
-  var audioContext = new AudioContext()
+
+  var audioContext = opts.output.audioContext ? opts.output.audioContext : new AudioContext()
 
   mixer.setAudioContext(audioContext)
   opts.output = opts.output || {
